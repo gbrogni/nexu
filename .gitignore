@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.env
+.DS_Store
+Thumbs.db
+*.log
+private_key.pem
+public_key.pem
