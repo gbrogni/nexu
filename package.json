@@ -10,7 +10,6 @@
     "db:logs": "docker-compose logs -f db"
   },
   "dependencies": {
-    "prisma": "^6.11.1",
     "zod": "^3.25.76",
     "zod-validation-error": "^3.0.0"
   },
