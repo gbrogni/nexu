@@ -1,18 +1,16 @@
 {
   "name": "nexu",
   "private": true,
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "pnpm -r dev",
-    "build": "pnpm -r build"
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api start:dev",
+    "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\"",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down",
+    "db:logs": "docker-compose logs -f db"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.28.0",
   "dependencies": {
+    "prisma": "^6.11.1",
     "zod": "^3.25.76",
     "zod-validation-error": "^3.0.0"
   },
