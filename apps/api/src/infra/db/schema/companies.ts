@@ -3,7 +3,7 @@ import { pgTable, uuid, varchar, boolean, numeric, integer, timestamp } from 'dr
 export const companies = pgTable('companies', {
   id: uuid('id').primaryKey().notNull(),
   name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 64 }).notNull(), // unique em index.ts
+  slug: varchar('slug', { length: 64 }).notNull(),
   podRequired: boolean('pod_required').notNull().default(false),
   allowCourierConfirmPayment: boolean('allow_courier_confirm_payment').notNull().default(true),
   commissionMode: integer('commission_mode').notNull(),

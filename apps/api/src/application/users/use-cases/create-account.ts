@@ -1,9 +1,11 @@
 import { Either, left, right } from '@/core/either';
 import { Injectable } from '@nestjs/common';
 import { HashGenerator } from '@/domain/cryptography/hash-generator';
+import { AuthProvider, UserRole, UserStatus } from '@/domain/accounts/enums';
+import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
-import { UsersRepository } from '@/domain/users/repositories/users-repository';
-import { User } from '@/domain/users/entities/user';
+import { UsersRepository } from '@/domain/accounts/repositories/users-repository';
+import { User } from '@/domain/accounts/entities';
 
 interface CreateAccountUseCaseRequest {
   name: string;
@@ -36,8 +38,13 @@ export class CreateAccountUseCase {
     const user = User.create({
       name,
       email,
-      password: hashedPassword,
-      authProvider: 'LOCAL'
+      passwordHash: hashedPassword,
+      authProvider: AuthProvider.LOCAL,
+      companyId: new UniqueEntityID(),
+      role: UserRole.OPERATOR,
+      status: UserStatus.ACTIVE,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     await this.usersRepository.create(user);

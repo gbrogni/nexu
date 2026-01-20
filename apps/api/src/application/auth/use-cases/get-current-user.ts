@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { User } from '@/domain/users/entities/user';
-import { UsersRepository } from '@/domain/users/repositories/users-repository';
+import { User } from '@/domain/accounts/entities';
+import { UsersRepository } from '@/domain/accounts/repositories/users-repository';
 import { Injectable } from '@nestjs/common';
 
 interface GetCurrentUserUseCaseRequest {

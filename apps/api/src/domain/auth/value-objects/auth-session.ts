@@ -1,4 +1,4 @@
-import { User } from '@/domain/users/entities/user';
+import { User } from '@/domain/accounts/entities';
 
 export class AuthSession {
   constructor(
