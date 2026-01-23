@@ -1,8 +1,16 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
-import { OrderOriginType, OrderStatus, PaymentMethod, PaymentStatus } from '../enums';
+import {
+  OrderOriginType,
+  OrderStatus,
+  PaymentMethod,
+  PaymentStatus,
+  ConfirmationSource,
+} from '../enums';
 import { AggregateRoot } from '@/core/entities/aggregate-root';
 import { OrderStatusChangedEvent } from '../events/order-status-changed.event';
 import { OrderCreatedEvent } from '../events/order-created.event';
+import { CourierAssignedEvent } from '../events/courier-assigned.event';
+import { PaymentConfirmedEvent } from '../events/payment-confirmed.event';
 
 export interface OrderProps {
   companyId: UniqueEntityID;
@@ -122,11 +130,11 @@ export class Order extends AggregateRoot<OrderProps> {
     const previousStatus = this.props.status;
     this.props.courierId = courierId;
     this.props.status = OrderStatus.ASSIGNED;
+    this.props.assignedAt = new Date();
     this.props.updatedAt = new Date();
 
-    this.addDomainEvent(
-      new OrderStatusChangedEvent(this, previousStatus, OrderStatus.ASSIGNED)
-    );
+    this.addDomainEvent(new CourierAssignedEvent(this, courierId));
+    this.addDomainEvent(new OrderStatusChangedEvent(this, previousStatus, OrderStatus.ASSIGNED));
   }
 
   markAsDelivered(): void {
@@ -135,12 +143,26 @@ export class Order extends AggregateRoot<OrderProps> {
     }
 
     const previousStatus = this.props.status;
+
     this.props.status = OrderStatus.DELIVERED;
+    this.props.deliveredAt = new Date();
     this.props.updatedAt = new Date();
 
-    this.addDomainEvent(
-      new OrderStatusChangedEvent(this, previousStatus, OrderStatus.DELIVERED)
-    );
+    this.addDomainEvent(new OrderStatusChangedEvent(this, previousStatus, OrderStatus.DELIVERED));
+  }
+
+  confirmPayment(
+    confirmationSource: ConfirmationSource,
+    confirmedByUserId?: UniqueEntityID | null,
+  ): void {
+    if (this.props.paymentStatus !== PaymentStatus.PENDING) {
+      throw new Error('Only PENDING payments can be confirmed');
+    }
+
+    this.props.paymentStatus = PaymentStatus.PAID;
+    this.props.updatedAt = new Date();
+
+    this.addDomainEvent(new PaymentConfirmedEvent(this, confirmationSource, confirmedByUserId));
   }
 
   static create(props: Omit<OrderProps, 'createdAt' | 'updatedAt'>, id?: UniqueEntityID): Order {
@@ -151,11 +173,17 @@ export class Order extends AggregateRoot<OrderProps> {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-      id
+      id,
     );
 
-    order.addDomainEvent(new OrderCreatedEvent(order));
+    if (!id) {
+      order.addDomainEvent(new OrderCreatedEvent(order));
+    }
 
     return order;
+  }
+
+  static reconstitute(props: OrderProps, id: UniqueEntityID): Order {
+    return new Order(props, id);
   }
 }

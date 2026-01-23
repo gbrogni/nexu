@@ -1,7 +1,8 @@
-import { Entity } from '@/core/entities/entity';
+import { AggregateRoot } from '@/core/entities/aggregate-root';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { ProfilePictureUrl } from '../value-objects/profile-picture-url';
 import { UserRole, UserStatus, AuthProvider } from '../enums';
+import { UserCreatedEvent } from '../events/user-created.event';
 
 export interface UserProps {
   companyId: UniqueEntityID;
@@ -19,7 +20,7 @@ export interface UserProps {
   updatedAt: Date;
 }
 
-export class User extends Entity<UserProps> {
+export class User extends AggregateRoot<UserProps> {
 
   get companyId(): UniqueEntityID {
     return this.props.companyId;
@@ -74,7 +75,16 @@ export class User extends Entity<UserProps> {
   }
 
   static create(props: UserProps, id?: UniqueEntityID) {
-    return new User(props, id);
+    const user = new User(props, id);
+
+    if (!id) {
+      user.addDomainEvent(new UserCreatedEvent(user));
+    }
+
+    return user;
   }
 
+  static reconstitute(props: UserProps, id: UniqueEntityID) {
+    return new User(props, id);
+  }
 }

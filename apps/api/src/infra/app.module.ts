@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { EnvModule } from './env/env.module';
-import { DrizzleModule } from './db/drizzle.module';
+import { DatabaseModule } from './database/database.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
-  imports: [EnvModule, DrizzleModule],
+  imports: [EnvModule, DatabaseModule, AuditModule],
 })
-export class AppModule {}
+export class AppModule { }

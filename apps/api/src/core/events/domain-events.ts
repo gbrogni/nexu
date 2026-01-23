@@ -2,10 +2,11 @@ import { AggregateRoot } from '../entities/aggregate-root';
 import { UniqueEntityID } from '../entities/unique-entity-id';
 import { DomainEvent } from './domain-event';
 
-type DomainEventCallback = (event: any) => void;
+type DomainEventCallback<T extends DomainEvent = DomainEvent> = (
+  event: T,
+) => void | Promise<void>;
 
 export class DomainEvents {
-
   private static handlersMap: Record<string, DomainEventCallback[]> = {};
   private static markedAggregates: AggregateRoot<any>[] = [];
 
@@ -19,28 +20,29 @@ export class DomainEvents {
     }
   }
 
-  private static dispatchAggregateEvents(aggregate: AggregateRoot<any>) {
-    aggregate.domainEvents.forEach((event: DomainEvent) => this.dispatch(event));
+  private static async dispatchAggregateEvents(aggregate: AggregateRoot<any>) {
+    for (const event of aggregate.domainEvents) {
+      await this.dispatch(event);
+    }
   }
 
   private static removeAggregateFromMarkedDispatchList(aggregate: AggregateRoot<any>) {
     const index = this.markedAggregates.findIndex((a) => a.equals(aggregate));
-
-    this.markedAggregates.splice(index, 1);
+    if (index >= 0) this.markedAggregates.splice(index, 1);
   }
 
   private static findMarkedAggregateByID(id: UniqueEntityID): AggregateRoot<any> | undefined {
     return this.markedAggregates.find((aggregate) => aggregate.id.equals(id));
   }
 
-  public static dispatchEventsForAggregate(id: UniqueEntityID) {
+  public static async dispatchEventsForAggregate(id: UniqueEntityID) {
     const aggregate = this.findMarkedAggregateByID(id);
 
-    if (aggregate) {
-      this.dispatchAggregateEvents(aggregate);
-      aggregate.clearEvents();
-      this.removeAggregateFromMarkedDispatchList(aggregate);
-    }
+    if (!aggregate) return;
+
+    await this.dispatchAggregateEvents(aggregate);
+    aggregate.clearEvents();
+    this.removeAggregateFromMarkedDispatchList(aggregate);
   }
 
   public static register(callback: DomainEventCallback, eventClassName: string) {
@@ -61,20 +63,17 @@ export class DomainEvents {
     this.markedAggregates = [];
   }
 
-  private static dispatch(event: DomainEvent) {
-    const eventClassName: string = event.constructor.name;
+  private static async dispatch(event: DomainEvent) {
+    if (!this.shouldRun) return;
 
-    const isEventRegistered = eventClassName in this.handlersMap;
+    const eventClassName = event.constructor.name;
+    const handlers = this.handlersMap[eventClassName] ?? [];
 
-    if (!this.shouldRun) {
-      return;
-    }
-
-    if (isEventRegistered) {
-      const handlers = this.handlersMap[eventClassName];
-
-      for (const handler of handlers) {
-        handler(event);
+    for (const handler of handlers) {
+      try {
+        await handler(event as any);
+      } catch (err) {
+        console.error(`[DomainEvents] handler error for ${eventClassName}`, err);
       }
     }
   }
