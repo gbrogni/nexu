@@ -2,15 +2,17 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { users } from '../../schema';
 import { User } from '@/domain/accounts/entities';
 import { AuthProvider, UserRole, UserStatus } from '@/domain/accounts/enums';
-import { ProfilePictureUrl } from '@/domain/accounts/value-objects';
+import { Cnpj, ProfilePictureUrl } from '@/domain/accounts/value-objects';
 
 export class DrizzleUserMapper {
   static toDomain(raw: typeof users.$inferSelect): User {
+    const cnpjVo = raw.cnpj ? Cnpj.tryCreate(raw.cnpj) : undefined;
     return User.create({
       companyId: new UniqueEntityID(raw.companyId),
       name: raw.name,
       email: raw.email ?? undefined,
       phone: raw.phone ?? undefined,
+      cnpj: cnpjVo,
       role: raw.role as UserRole,
       status: raw.status as UserStatus,
       passwordHash: raw.passwordHash ?? undefined,
@@ -30,6 +32,7 @@ export class DrizzleUserMapper {
       name: user.name,
       email: user.email,
       phone: user.phone,
+      cnpj: user.cnpj?.getValue(),
       role: user.role,
       status: user.status,
       passwordHash: user.passwordHash,

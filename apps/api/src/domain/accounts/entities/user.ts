@@ -3,12 +3,14 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { ProfilePictureUrl } from '../value-objects/profile-picture-url';
 import { UserRole, UserStatus, AuthProvider } from '../enums';
 import { UserCreatedEvent } from '../events/user-created.event';
+import { Cnpj } from '../value-objects';
 
 export interface UserProps {
   companyId: UniqueEntityID;
   name: string;
   email?: string;
   phone?: string;
+  cnpj?: Cnpj;
   role: UserRole;
   status: UserStatus;
   passwordHash?: string;
@@ -36,6 +38,10 @@ export class User extends AggregateRoot<UserProps> {
 
   get phone(): string | undefined {
     return this.props.phone;
+  }
+
+  get cnpj(): Cnpj | undefined {
+    return this.props.cnpj;
   }
 
   get role(): UserRole {
