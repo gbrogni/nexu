@@ -17,13 +17,13 @@ import {
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { WrongCredentialsError } from '@/core/errors/wrong-credentials-error';
 import { AuthenticateUserUseCase } from '@/application/auth/use-cases/authenticate-user';
 import { AuthenticateDto } from '../dtos/authenticate-dto';
 import { Throttle } from '@nestjs/throttler';
 import { SessionManager } from '@/domain/auth/contracts/session-manager.interface';
 import { AuthMapper } from '../mappers/auth-mapper';
+import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 
 const loginBodySchema = z.object({
   email: z.string().email(),

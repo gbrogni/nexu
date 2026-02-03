@@ -5,7 +5,7 @@ import { UserCreatedEvent } from '@/domain/accounts/events/user-created.event';
 import { AuditEventLogger } from '../../audit-event-logger';
 
 @Injectable()
-export class OnUserCreated implements EventHandler, OnModuleInit {
+export class OnUserCreatedAuditSubscriber implements EventHandler, OnModuleInit {
   constructor(private auditEventLogger: AuditEventLogger) { }
 
   onModuleInit() {

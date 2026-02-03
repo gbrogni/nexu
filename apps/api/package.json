@@ -17,6 +17,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -28,6 +29,7 @@
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "drizzle-orm": "^0.45.1",
+    "handlebars": "^4.7.8",
     "helmet": "^8.1.0",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
@@ -44,6 +46,7 @@
     "@swc/core": "^1.10.7",
     "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.0",
+    "@types/handlebars": "^4.1.0",
     "@types/node": "^22.10.7",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth2": "^0.1.10",

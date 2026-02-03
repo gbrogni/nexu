@@ -80,6 +80,14 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.updatedAt;
   }
 
+  activate(): void {
+    if (this.status === UserStatus.ACTIVE) {
+      throw new Error('User already active');
+    }
+    this.props.status = UserStatus.ACTIVE;
+    this.props.updatedAt = new Date();
+  }
+
   static create(props: UserProps, id?: UniqueEntityID) {
     const user = new User(props, id);
 

@@ -21,7 +21,7 @@ import { z } from 'zod';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 import { Public } from '@/infra/auth/public';
 import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
-import { CreateAccountUseCase } from '@/application/users/use-cases/create-account';
+import { CreateAccountUseCase } from '@/application/accounts/use-cases/create-account';
 import { CreateAccountDto } from '../dtos/create-account-dto';
 
 const createAccountBodySchema = z.object({

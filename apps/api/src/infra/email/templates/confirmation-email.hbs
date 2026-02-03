@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>Confirme seu Email</title>
+  <style>
+    /* Reset básico */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    /* Container principal */
+    .email-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .email-container {
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .email-header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    /* Body */
+    .email-body {
+      padding: 40px 30px;
+    }
+
+    .greeting {
+      font-size: 18px;
+      color: #333333;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      font-size: 16px;
+      color: #666666;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    /* Button */
+    .button-container {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .confirm-button {
+      display: inline-block;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .confirm-button:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Alternative link */
+    .alt-link {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .alt-link p {
+      font-size: 14px;
+      color: #666666;
+      margin: 0 0 10px 0;
+    }
+
+    .alt-link a {
+      color: #667eea;
+      word-break: break-all;
+      font-size: 14px;
+    }
+
+    /* Footer */
+    .email-footer {
+      padding: 30px;
+      background-color: #f8f9fa;
+      text-align: center;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .email-footer p {
+      color: #999999;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    /* Expiry warning */
+    .expiry-warning {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .expiry-warning p {
+      color: #856404;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* Responsive */
+    @media only screen and (max-width: 600px) {
+      .email-wrapper {
+        padding: 10px;
+      }
+
+      .email-body {
+        padding: 30px 20px;
+      }
+
+      .email-header h1 {
+        font-size: 24px;
+      }
+
+      .confirm-button {
+        padding: 14px 30px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+      <!-- Header -->
+      <div class="email-header">
+        <h1>🎉 Bem-vindo ao Nexu!</h1>
+      </div>
+
+      <!-- Body -->
+      <div class="email-body">
+        <p class="greeting">Olá, <strong>{{userName}}</strong>!</p>
+
+        <p class="message">
+          Obrigado por se cadastrar no <strong>Nexu</strong>! Estamos muito felizes em tê-lo(a) conosco.
+        </p>
+
+        <p class="message">
+          Para começar a usar sua conta, precisamos confirmar seu endereço de email.
+          Basta clicar no botão abaixo:
+        </p>
+
+        <!-- CTA Button -->
+        <div class="button-container">
+          <a href="{{confirmationUrl}}"
+             class="confirm-button">
+            ✓ Confirmar Meu Email
+          </a>
+        </div>
+
+        <!-- Expiry Warning -->
+        <div class="expiry-warning">
+          <p>
+            ⏰ <strong>Importante:</strong> Este link expira em {{expiresInHours}} horas.
+            Se você não confirmar dentro deste prazo, será necessário solicitar um novo email.
+          </p>
+        </div>
+
+        <!-- Alternative link -->
+        <div class="alt-link">
+          <p>Se o botão não funcionar, copie e cole o link abaixo no seu navegador:</p>
+          <a href="{{confirmationUrl}}">{{confirmationUrl}}</a>
+        </div>
+
+        <p class="message"
+           style="margin-top: 30px;">
+          Se você não criou uma conta no Nexu, pode ignorar este email com segurança.
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="email-footer">
+        <p><strong>Nexu</strong> - Sua plataforma de gestão</p>
+        <p>Este é um email automático, por favor não responda.</p>
+        <p style="margin-top: 15px; font-size: 12px;">
+          © {{currentYear}} Nexu. Todos os direitos reservados.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

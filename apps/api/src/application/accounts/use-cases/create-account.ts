@@ -6,6 +6,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
 import { UsersRepository } from '@/domain/accounts/repositories/users-repository';
 import { User } from '@/domain/accounts/entities';
+import { DomainEvents } from '@/core/events/domain-events';
 
 interface CreateAccountUseCaseRequest {
   name: string;
@@ -42,12 +43,13 @@ export class CreateAccountUseCase {
       authProvider: AuthProvider.LOCAL,
       companyId: new UniqueEntityID(),
       role: UserRole.OPERATOR,
-      status: UserStatus.ACTIVE,
+      status: UserStatus.PENDING_CONFIRMATION,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     await this.usersRepository.create(user);
+    await DomainEvents.dispatchEventsForAggregate(user.id);
 
     return right({
       user: user,

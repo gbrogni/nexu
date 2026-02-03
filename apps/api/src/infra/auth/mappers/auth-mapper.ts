@@ -1,5 +1,5 @@
 import { User } from '@/domain/accounts/entities';
-import { CurrentUserResponseDto } from '../../users/dtos/current-user-response-dto';
+import { CurrentUserResponseDto } from '@/infra/accounts/dtos/current-user-response-dto';
 
 export class AuthMapper {
 

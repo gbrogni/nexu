@@ -10,8 +10,8 @@ import {
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { UserPayload } from '@/infra/auth/jwt.strategy';
 import { GetCurrentUserUseCase } from '@/application/auth/use-cases/get-current-user';
-import { AuthMapper } from '../../auth/mappers/auth-mapper';
 import { CurrentUserResponseDto } from '../dtos/current-user-response-dto';
+import { AuthMapper } from '@/infra/auth/mappers/auth-mapper';
 
 @ApiTags('👥 Users')
 @Controller('users')

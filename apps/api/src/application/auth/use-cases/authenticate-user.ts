@@ -8,6 +8,8 @@ import { RefreshTokenRepository } from '@/domain/auth/repositories/refresh-token
 import { RefreshToken } from '@/domain/auth/entities/refresh-token';
 import { randomBytes } from 'crypto';
 import { User } from '@/domain/accounts/entities';
+import { UserStatus } from '@/domain/accounts/enums';
+import { EmailNotConfirmedError } from '@/core/errors/email-not-confirmed-error';
 
 interface AuthenticateUserUseCaseRequest {
   email: string;
@@ -46,6 +48,10 @@ export class AuthenticateUserUseCase {
 
     if (!isPasswordValid) {
       return left(new WrongCredentialsError());
+    }
+
+    if (user.status === UserStatus.PENDING_CONFIRMATION) {
+      return left(new EmailNotConfirmedError());
     }
 
     const accessToken: string = await this.encrypter.encrypt({

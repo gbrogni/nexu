@@ -1,0 +1,1 @@
+export const SESSION_MANAGER = Symbol('SESSION_MANAGER');

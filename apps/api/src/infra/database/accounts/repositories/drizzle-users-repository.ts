@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { users } from '../../schema';
-import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { BaseRepository } from '../../base-repository';
 import { UsersRepository } from '@/domain/accounts/repositories/users-repository';
 import { DatabaseService } from '../../database.service';
@@ -12,6 +11,20 @@ import { DrizzleUserMapper } from '../mappers/drizzle-user-mapper';
 export class DrizzleUsersRepository extends BaseRepository implements UsersRepository {
   constructor(protected readonly dbService: DatabaseService) {
     super(dbService);
+  }
+
+  async update(user: User): Promise<void> {
+    const data = DrizzleUserMapper.toDrizzle(user);
+
+    const result = await this.db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, user.id.toString()))
+      .returning({ id: users.id });
+
+    if (result.length === 0) {
+      throw new Error(`User with id ${user.id} not found`);
+    }
   }
 
   async findByEmail(email: string): Promise<User | null> {

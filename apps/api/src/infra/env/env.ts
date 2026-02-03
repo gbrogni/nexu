@@ -10,6 +10,9 @@ export const envSchema = z.object({
   CALLBACK_URL: z.string().url(),
   FRONTEND_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
+  BREVO_API_KEY: z.string().min(1, 'Brevo API key is required'),
+  BREVO_SENDER_EMAIL: z.string().email('Invalid sender email'),
+  BREVO_SENDER_NAME: z.string().default('Nexu App'),
 });
 
 export type Env = z.infer<typeof envSchema>;

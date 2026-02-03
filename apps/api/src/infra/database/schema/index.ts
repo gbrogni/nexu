@@ -9,3 +9,4 @@ export * from './audit-events';
 export * from './refresh-tokens';
 export * from './token-blacklist';
 export * from './checkout-sessions';
+export * from './email-confirmation-tokens';
